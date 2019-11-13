@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0 //EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.test.taewon.model.dao.CommentMapper">
+	<select id="selectAll" parameterType="int" resultType="comment">
+		select * from comment 
+		where boardId = #{boardId}
+		order by commentId desc
+	</select>
+	
+	<insert id="insert" parameterType="comment">
+		insert into comment(boardId, username, content, cDate, cGroup, cIndent, cStep, cLike)
+		values(#{boardId}, #{username}, #{content}, now(), (select max(commentId) from comment co) +1, 0, 0, 0)
+	</insert>
+	
+	<delete id="delete" parameterType="int">
+		delete from comment 
+		where commentId = #{commentId}
+	</delete>
+	
+</mapper>

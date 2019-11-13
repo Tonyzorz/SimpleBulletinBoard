@@ -1,5 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page session="true" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
 <html>
 <head>
 	<title>Home</title>
@@ -21,15 +23,15 @@ ${session }
 		<a href="toRegister">register</a> &nbsp;&nbsp;&nbsp;
 	</c:otherwise>
 </c:choose>
-
-<%-- <c:if test="${session == null }"> --%>
-<!-- 	<a href="toLogin">login</a> &nbsp;&nbsp;&nbsp; -->
-<!-- 	<a href="toRegister">register</a> &nbsp;&nbsp;&nbsp; -->
-<%-- </c:if> --%>
-<%-- <c:if test="${session != null }"> --%>
-<!-- 	<a href="logout">Logout</a> &nbsp;&nbsp;&nbsp; -->
-<!-- 	<a href="toRegister">register</a> &nbsp;&nbsp;&nbsp; -->
-<%-- </c:if> --%>
+<a href="boardList">게시판</a>&nbsp;&nbsp;&nbsp;
+<form action="search">
+	<span>검색 : </span><input type="text" name="search">&nbsp;&nbsp;
+	<select name="type">
+		<option value="bTitle" selected="selected">title</option>
+		<option value="bContent" >content</option>
+	</select>
+	<input type="submit" value="검색">
+</form>
 
 </body>
 </html>

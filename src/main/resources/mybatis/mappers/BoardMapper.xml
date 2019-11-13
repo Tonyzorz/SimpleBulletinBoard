@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0 //EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.test.taewon.model.dao.BoardMapper">
+	<select id="selectAll" resultType="board">
+		select * from board order by bGroup desc, bStep asc
+	</select>
+
+	<insert id="insert" parameterType="board">
+		insert into board (bUsername, bTitle, bContent, bDate, bHit, bGroup, bIndent, bStep)
+		values (#{bUsername}, #{bTitle}, #{bContent}, now(), 0, 
+			(select max(boardId)+1 from board bo), 0, 0)
+	</insert>
+	
+	<select id="select" parameterType="board" resultType="Board">
+		select * from board 
+		where boardId = #{boardId}
+	</select>
+	<update id="update" parameterType="board">
+		update board
+		set bTitle = #{bTitle}, bContent = #{bContent}
+		where boardId = #{boardId}
+	</update>
+	<delete id="delete" parameterType="board">
+		delete from board
+		where boardId = #{boardId}
+	</delete>
+	
+	<update id="hit" parameterType="int">
+		update board
+		set bHit = bHit +1
+		where boardId = #{boardId}
+	</update>
+	
+	<insert id="reply" parameterType="board">
+		insert into board(bUsername, bTitle, bContent, bDate, bHit, bGroup, bIndent, bStep)
+		values(#{bUsername}, #{bTitle}, #{bContent}, now(), 0, #{bGroup}, #{bIndent} + 1, #{bStep} +1)
+	</insert>
+	
+	<update id="replyShape" parameterType="board">
+		update board 
+		set bStep = #{bStep} + 1
+		where bGroup = #{bGroup} and bStep > #{bStep}
+	</update>
+	
+	<select id="search" parameterType="map" resultType="board">
+<!-- 	<bind name="result" value="'%' + #{search} + '%'"/> -->
+		select * from board
+		where #{type} like concat(#{search}, '%')
+	</select>
+</mapper>
