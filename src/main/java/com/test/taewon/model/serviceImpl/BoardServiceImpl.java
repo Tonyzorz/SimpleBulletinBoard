@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.test.taewon.model.common.Pagination;
 import com.test.taewon.model.dao.BoardMapper;
 import com.test.taewon.model.dto.Board;
 import com.test.taewon.model.service.BoardService;
@@ -16,9 +18,9 @@ public class BoardServiceImpl implements BoardService{
 	BoardMapper boardMapper;
 
 	@Override
-	public List<Board> selectAll() {
+	public List<Board> selectAll(Pagination pagination) {
 		
-		return boardMapper.selectAll();
+		return boardMapper.selectAll(pagination);
 	}
 
 	@Override
@@ -28,6 +30,7 @@ public class BoardServiceImpl implements BoardService{
 
 	@Override
 	public Board select(Board board) {
+		hit(board.getBoardId());
 		return boardMapper.select(board);
 	}
 
@@ -55,7 +58,13 @@ public class BoardServiceImpl implements BoardService{
 	@Override
 	public List<Board> search(String search, String type) {
 		System.out.println(search + type);
+		System.out.println("its boardserviceimpl" + boardMapper.search(search, type));
 		return boardMapper.search(search, type);
+	}
+	
+	@Override
+	public int getBoardListCnt() throws Exception {
+		return boardMapper.getBoardListCnt();
 	}
 	
 	

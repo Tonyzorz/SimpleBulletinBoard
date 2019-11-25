@@ -4,7 +4,14 @@
 
 <mapper namespace="com.test.taewon.model.dao.BoardMapper">
 	<select id="selectAll" resultType="board">
-		select * from board order by bGroup desc, bStep asc
+		select * from board 
+		order by bGroup desc, bStep asc
+		limit #{startList}, #{listSize}
+	</select>
+	
+	<select id="getBoardListCnt" resultType="int">
+		select count(*) listCnt 
+		from board
 	</select>
 
 	<insert id="insert" parameterType="board">
@@ -47,6 +54,18 @@
 	<select id="search" parameterType="map" resultType="board">
 <!-- 	<bind name="result" value="'%' + #{search} + '%'"/> -->
 		select * from board
-		where #{type} like concat(#{search}, '%')
+		<trim prefix="where" prefixOverrides="and|or">
+			<if test="type==btitle">
+				and btitle like concat('%',#{search},'%')
+			</if>
+			<if test="type==bcontent">
+				and bcontent like concat('%',#{search},'%')
+			</if>
+		</trim>
+<!-- 		where #{type} like concat('%',#{search},'%') -->
+<!-- 		select("*"); -->
+<!-- 		from("board"); -->
+<!-- 		where("#{type} like '%' #{search} '%'"); -->
+		
 	</select>
 </mapper>

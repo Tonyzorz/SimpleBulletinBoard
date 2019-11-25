@@ -27,7 +27,7 @@ ${session }
 <form action="search">
 	<span>검색 : </span><input type="text" name="search">&nbsp;&nbsp;
 	<select name="type">
-		<option value="bTitle" selected="selected">title</option>
+		<option value="btitle" selected="selected">title</option>
 		<option value="bContent" >content</option>
 	</select>
 	<input type="submit" value="검색">

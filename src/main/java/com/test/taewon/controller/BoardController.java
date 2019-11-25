@@ -4,10 +4,12 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.test.taewon.model.common.Pagination;
 import com.test.taewon.model.dto.Board;
 import com.test.taewon.model.service.BoardService;
 import com.test.taewon.model.service.CommentService;
@@ -22,8 +24,18 @@ public class BoardController {
 	CommentService commentService;
 	
 	@RequestMapping("boardList")
-	public String toBoardList(Model model, Board board) {
-		model.addAttribute("board", boardService.selectAll());
+	public String toBoardList(Model model, Board board,
+			@RequestParam(required = false, defaultValue= "1")int page,
+			@RequestParam(required = false, defaultValue= "1")int range) throws Exception {
+		//전체 게시글 개수
+		int listCnt = boardService.getBoardListCnt();
+		
+		//Pagination 
+		Pagination pagination = new Pagination();
+		pagination.pageInfo(page, range, listCnt);
+		
+		model.addAttribute("pagination", pagination);
+		model.addAttribute("board", boardService.selectAll(pagination));
 		return "board/boardList";
 	}
 	
@@ -40,7 +52,6 @@ public class BoardController {
 	
 	@RequestMapping("boardView")
 	public String toBoardView(Board board, Model model) {
-		boardService.hit(board.getBoardId());
 		model.addAttribute("board", boardService.select(board));
 		model.addAttribute("comment", commentService.selectAll(board.getBoardId()));
 		return "board/boardView";
@@ -82,4 +93,6 @@ public class BoardController {
 		System.out.println(boardService.search(search, type));
 		return "board/search";
 	}
+	
+	
 }
